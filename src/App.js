@@ -46,5 +46,9 @@ function Friend({ friend }) {
 
     {friend.balance < 0 && <p className="red">You own ${friend.name} {Math.abs(friend.balance)}$</p>}
 
+    {friend.balance > 0 && <p className="red">You own ${friend.name} {Math.abs(friend.balance)}$</p>}
+
+    {friend.balance === 0 && <p className="red">You own ${friend.name} {Math.abs(friend.balance)}$</p>}
+
   </li>
 }
