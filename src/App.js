@@ -34,6 +34,8 @@ export default function App() {
   const [friends, setFriends] = useState(initialFriends)
   const [showFriend, setShowAddFriend] = useState(false);
 
+  const [selectedFriend, setSelectedFriend] = useState(null);
+
 
   function handelShowAddFriend() {
     setShowAddFriend((show) => !show);
@@ -42,30 +44,43 @@ export default function App() {
 
   function handelAddFriend(friend) {
     setFriends(friends => [...friends, friend]);
+    setShowAddFriend(false);
+  }
+
+
+  function handelSelection(friend) {
+    setSelectedFriend(friend)
   }
 
 
 
   return <div className="app">
     <div className="sidebar">
-      <FriendList friends={friends} />
+      <FriendList friends={friends} onSelection={handelSelection} />
+
       {showFriend && <FormFriend onAddFriend={handelAddFriend} />}
-      <Button onClick={handelShowAddFriend}>{showFriend ? "close" : "Add Friend"}</Button>
+
+      <Button onClick={handelShowAddFriend}>
+        {showFriend ? "close" : "Add Friend"}'
+      </Button>
+
     </div>
-    <FormSplitBill />
+    {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
   </div>
 }
 
-function FriendList({ friends }) {
 
+
+
+function FriendList({ friends, onSelection }) {
   return <ul>
     {
-      friends.map(friend => <Friend friend={friend} key={friend.id} />)
+      friends.map(friend => <Friend friend={friend} key={friend.id}
+        onSelection={onSelection} />)
     }
   </ul>
 }
-
-function Friend({ friend }) {
+function Friend({ friend, onSelection }) {
   return <li>
     <img src={friend.image} alt={friend.image} />
     <h3>{friend.name}</h3>
@@ -76,7 +91,7 @@ function Friend({ friend }) {
 
     {friend.balance === 0 && <p>You age {friend.name} are even</p>}
 
-    <Button>Select</Button>
+    <Button onClick={() => onSelection(friend)}>Select</Button>
 
   </li>
 }
@@ -123,24 +138,24 @@ function FormFriend({ onAddFriend }) {
   </form>
 }
 
-function FormSplitBill() {
+function FormSplitBill({ selectedFriend }) {
   return (
     <form className="form-split-bill">
-      <h2>Spilt a bill with X</h2>
+      <h2>Spilt a bill with {selectedFriend.name}</h2>
 
-      <label>Bill Value</label>
+      <label>💰Bill Value</label>
       <input type="text" />
 
-      <label>Your Expense</label>
+      <label>🚺Your Expense</label>
       <input type="text" />
 
-      <label>X's Expense</label>
+      <label>🚻{selectedFriend.name}'s Expense</label>
       <input type="text" disabled />
 
-      <label>Who is paying the bill</label>
+      <label>😵Who is paying the bill</label>
       <select>
         <option value="user">You</option>
-        <option value="friend">X</option>
+        <option value="friend">{selectedFriend.name}</option>
       </select>
 
       <Button>Spilt Bill</Button>
