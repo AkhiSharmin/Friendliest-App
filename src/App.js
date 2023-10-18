@@ -72,29 +72,42 @@ export default function App() {
 
 
 
-function FriendList({ friends, onSelection }) {
+function FriendList({ friends, onSelection, selectedFriend }) {
   return <ul>
     {
       friends.map(friend => <Friend friend={friend} key={friend.id}
-        onSelection={onSelection} />)
+        onSelection={onSelection}
+        selectedFriend={selectedFriend}
+      />)
     }
   </ul>
 }
-function Friend({ friend, onSelection }) {
-  return <li>
-    <img src={friend.image} alt={friend.image} />
-    <h3>{friend.name}</h3>
 
-    {friend.balance < 0 && <p className="red">You own ${friend.name} {Math.abs(friend.balance)}$</p>}
 
-    {friend.balance > 0 && <p className="green">{friend.name} owes you{Math.abs(friend.balance)}$</p>}
+function Friend({ friend, onSelection, selectedFriend }) {
+  const isSelected = selectedFriend && selectedFriend.id === friend.id; // Check if selectedFriend is not null
 
-    {friend.balance === 0 && <p>You age {friend.name} are even</p>}
+  return (
+    <li className={isSelected ? "selected" : ""}>
+      <img src={friend.image} alt={friend.name} />
+      <h3>{friend.name}</h3>
 
-    <Button onClick={() => onSelection(friend)}>Select</Button>
+      {friend.balance < 0 && (
+        <p className="red">You owe {friend.name} ${Math.abs(friend.balance)}</p>
+      )}
 
-  </li>
+      {friend.balance > 0 && (
+        <p className="green">{friend.name} owes you ${Math.abs(friend.balance)}</p>
+      )}
+
+      {friend.balance === 0 && <p>{friend.name} is even</p>}
+
+      <Button onClick={() => onSelection(friend)}>
+        {isSelected ? "Close" : "Select"}</Button>
+    </li>
+  );
 }
+
 
 
 
