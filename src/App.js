@@ -49,7 +49,9 @@ export default function App() {
 
 
   function handelSelection(friend) {
-    setSelectedFriend(friend)
+    // setSelectedFriend(friend);
+    setSelectedFriend((cur) => cur?.id === friend.id ? null : friend);
+    setShowAddFriend(false)
   }
 
 
@@ -85,7 +87,7 @@ function FriendList({ friends, onSelection, selectedFriend }) {
 
 
 function Friend({ friend, onSelection, selectedFriend }) {
-  const isSelected = selectedFriend && selectedFriend.id === friend.id; // Check if selectedFriend is not null
+  const isSelected = selectedFriend?.id === friend.id; // Check if selectedFriend is not null
 
   return (
     <li className={isSelected ? "selected" : ""}>
@@ -103,7 +105,8 @@ function Friend({ friend, onSelection, selectedFriend }) {
       {friend.balance === 0 && <p>{friend.name} is even</p>}
 
       <Button onClick={() => onSelection(friend)}>
-        {isSelected ? "Close" : "Select"}</Button>
+        {isSelected ? "Close" : "Select"}
+      </Button>
     </li>
   );
 }
